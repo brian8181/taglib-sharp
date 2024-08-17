@@ -69,6 +69,7 @@ namespace TagLib.Matroska
 	[SupportedMimeType ("taglib/mkv", "mkv")]
 	[SupportedMimeType ("taglib/mka", "mka")]
 	[SupportedMimeType ("taglib/mks", "mks")]
+	[SupportedMimeType ("taglib/webm", "webm")]
 	[SupportedMimeType ("video/webm")]
 	[SupportedMimeType ("video/x-matroska")]
 	public class File : TagLib.File
@@ -337,10 +338,11 @@ namespace TagLib.Matroska
 				EBMLreader element;
 				try {
 					element = new EBMLreader (this, offset);
-				} catch (Exception ex) {
+				} catch (Exception) {
 					// Sometimes, the file has zero padding at the end
-					if (hasSegment) break; // Avoid crash 
-					throw ex;
+					if (hasSegment)
+						break; // Avoid crash 
+					throw;
 				}
 
 				EBMLID ebml_id = (EBMLID)element.ID;

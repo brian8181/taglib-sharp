@@ -1,9 +1,14 @@
 <Project>
+
   <PropertyGroup>
-    <ReleaseVersion>2.2.0.0</ReleaseVersion>
+    <ReleaseVersion>2.4.0.0</ReleaseVersion>
     <RepositoryUrl>https://github.com/mono/taglib-sharp</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <TaglibSharpTargetFramework>net45;netstandard2.0</TaglibSharpTargetFramework>
+
+    <!-- Make sure to update Directory.Build.targets too! -->
+    <ExeTargetFrameworks>net6.0;net472</ExeTargetFrameworks>
+    <LibTargetFrameworks>net6.0;netstandard2.0</LibTargetFrameworks>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
+
 </Project>

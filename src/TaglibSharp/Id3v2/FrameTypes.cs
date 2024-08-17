@@ -40,8 +40,11 @@ namespace TagLib.Id3v2
 	{
 		public static readonly ReadOnlyByteVector APIC = "APIC";
 		public static readonly ReadOnlyByteVector COMM = "COMM";
+		public static readonly ReadOnlyByteVector CHAP = "CHAP"; // Chapter Frame
+		public static readonly ReadOnlyByteVector CTOC = "CTOC"; // Table of Contents Frame
 		public static readonly ReadOnlyByteVector EQUA = "EQUA";
 		public static readonly ReadOnlyByteVector GEOB = "GEOB";
+		public static readonly ReadOnlyByteVector IPLS = "IPLS";
 		public static readonly ReadOnlyByteVector MCDI = "MCDI";
 		public static readonly ReadOnlyByteVector PCNT = "PCNT";
 		public static readonly ReadOnlyByteVector POPM = "POPM";
@@ -64,6 +67,7 @@ namespace TagLib.Id3v2
 		public static readonly ReadOnlyByteVector TIT3 = "TIT3";
 		public static readonly ReadOnlyByteVector TIME = "TIME";
 		public static readonly ReadOnlyByteVector TKEY = "TKEY";
+		public static readonly ReadOnlyByteVector TLEN = "TLEN"; // audio length
 		public static readonly ReadOnlyByteVector TMCL = "TMCL";
 		public static readonly ReadOnlyByteVector TOLY = "TOLY";
 		public static readonly ReadOnlyByteVector TOPE = "TOPE";
@@ -97,5 +101,7 @@ namespace TagLib.Id3v2
 		public static readonly ReadOnlyByteVector WPUB = "WPUB";
 		public static readonly ReadOnlyByteVector WXXX = "WXXX";
 		public static readonly ReadOnlyByteVector ETCO = "ETCO";
+		public static readonly ReadOnlyByteVector MVNM = "MVNM"; // Movement Name
+		public static readonly ReadOnlyByteVector MVIN = "MVIN"; // Movement Number/Count
 	}
 }

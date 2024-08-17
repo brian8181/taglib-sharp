@@ -997,6 +997,34 @@ namespace TaglibSharp.Tests.TaggingFormats
 		}
 
 		[Test]
+		public void TestLength ()
+		{
+			Tag tag = new Tag ();
+			for (byte version = 2; version <= 4; version++) {
+				tag.Version = version;
+
+				TagTestWithSave (ref tag, delegate (Tag t, string m) {
+					Assert.IsTrue (t.IsEmpty, "Initial (IsEmpty): " + m);
+					Assert.IsNull (t.Length, "Initial (Null): " + m);
+				});
+
+				tag.Length = val_sing;
+
+				TagTestWithSave (ref tag, delegate (Tag t, string m) {
+					Assert.IsFalse (t.IsEmpty, "Value Set (!IsEmpty): " + m);
+					Assert.AreEqual (val_sing, t.Length, "Value Set (!Null): " + m);
+				});
+
+				tag.Length = string.Empty;
+
+				TagTestWithSave (ref tag, delegate (Tag t, string m) {
+					Assert.IsTrue (t.IsEmpty, "Value Cleared (IsEmpty): " + m);
+					Assert.IsNull (t.Length, "Value Cleared (Null): " + m);
+				});
+			}
+		}
+
+		[Test]
 		public void TestRemixedBy ()
 		{
 			Tag tag = new Tag ();
@@ -1049,6 +1077,7 @@ namespace TaglibSharp.Tests.TaggingFormats
 				InitialKey = "K",
 				Publisher = "L",
 				ISRC = "M",
+				Length = "L",
 				RemixedBy = "N"
 			};
 
@@ -1078,6 +1107,7 @@ namespace TaglibSharp.Tests.TaggingFormats
 			Assert.IsNull (tag.InitialKey, "InitialKey");
 			Assert.IsNull (tag.Publisher, "Publisher");
 			Assert.IsNull (tag.ISRC, "ISRC");
+			Assert.IsNull (tag.Length, "Length");
 			Assert.IsNull (tag.RemixedBy, "RemixedBy");
 		}
 
@@ -1470,6 +1500,54 @@ namespace TaglibSharp.Tests.TaggingFormats
 		}
 
 		[Test]
+		public void TestMovementNameFrame ()
+		{
+			ByteVector id = "MVNM";
+			var frame = new TextInformationFrame (id) {
+				Text = val_mult
+			};
+
+			FrameTest (frame, 2,
+				delegate (Frame f, StringType e) {
+					(f as TextInformationFrame).TextEncoding = e;
+				},
+				(d, v) => new TextInformationFrame (d, v),
+
+				delegate (Frame f, string m) {
+					var g = (f as TextInformationFrame);
+					Assert.AreEqual (id, g.FrameId, m);
+					Assert.AreEqual (val_mult.Length, g.Text.Length, m);
+					for (int i = 0; i < val_mult.Length; i++) {
+						Assert.AreEqual (val_mult[i], g.Text[i], m);
+					}
+				});
+		}
+
+		[Test]
+		public void TestMovementNumberFrame ()
+		{
+			ByteVector id = "MVIN";
+			var frame = new TextInformationFrame (id) {
+				Text = val_mult
+			};
+
+			FrameTest (frame, 2,
+				delegate (Frame f, StringType e) {
+					(f as TextInformationFrame).TextEncoding = e;
+				},
+				(d, v) => new TextInformationFrame (d, v),
+
+				delegate (Frame f, string m) {
+					var g = (f as TextInformationFrame);
+					Assert.AreEqual (id, g.FrameId, m);
+					Assert.AreEqual (val_mult.Length, g.Text.Length, m);
+					for (int i = 0; i < val_mult.Length; i++) {
+						Assert.AreEqual (val_mult[i], g.Text[i], m);
+					}
+				});
+		}
+
+		[Test]
 		public void TestUniqueFileIdentifierFrame ()
 		{
 			ByteVector data = val_sing;
@@ -1566,6 +1644,40 @@ namespace TaglibSharp.Tests.TaggingFormats
 						Assert.AreEqual (events[i].Time, g.Events[i].Time, m);
 					}
 				});
+		}
+
+		[Test]
+		public void TestInvolvedPersonsFrame ()
+		{
+			var personFunction = new string[] {"Person1", "Function1", "Person2", "Function2"};
+			var delimiter = new string(new char[1]{'\0'});
+
+			var ipls = "";
+			foreach (var s in personFunction) {
+				ipls += s + delimiter;
+			}
+			ipls = ipls.Trim(new[] {'\0'});
+
+			ByteVector id = "IPLS";
+			var frame = new TextInformationFrame (id) {
+				Text = new string[] { ipls }
+			};
+
+			FrameTest (frame, 3,
+				delegate (Frame f, StringType e) {
+					(f as TextInformationFrame).TextEncoding = e;
+				},
+				(d, v) => new TextInformationFrame (d, v),
+
+				delegate (Frame f, string m) {
+					var g = (f as TextInformationFrame);
+					Assert.AreEqual (id, g.FrameId, m);
+					var p = g.Text[0].Split(new[] { '\0' });
+					for (var i = 0; i < p.Length; i++) {
+						Assert.AreEqual (personFunction[i], p[i], m);
+					}
+				});
+
 		}
 
 		delegate void TagTestFunc (Tag tag, string msg);
